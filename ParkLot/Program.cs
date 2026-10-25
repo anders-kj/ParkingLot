@@ -18,6 +18,11 @@ internal class Program
         ps.PrintSpotsOccupation();
         ps.ParkBike();
         ps.PrintSpotsOccupation();
+        ps.ParkCar(7);
+        ps.ParkBike(5);
+        ps.PrintSpotsOccupation();
+        ps.ParkCar();
+        ps.PrintSpotsOccupation();
     }
 }
 
@@ -120,6 +125,12 @@ internal class ParkService
         }
     }
 
+    public void ParkCar()
+    {
+        int spotIndex = parkingSpotFinderService.FindCarSpot();
+        ParkCar(spotIndex);
+    }
+
     public void ParkCar(int spot)
     {
         parkingSpotStatus[spot] = OCCUPIED;
@@ -196,6 +207,30 @@ internal class ParkingSpotFinderService
     {
         int result = parkingSpotService.GetParkingSpotStatus(spotIndex);
         result += parkingSpotService.GetParkingSpotStatus(spotIndex - 1);
+        result += parkingSpotService.GetParkingSpotStatus(spotIndex + 1);
+        return result;
+    }
+
+    public int FindCarSpot()
+    {
+        List<int> emptySpots = parkingSpotService.GetFreeCarSpots();
+        int maxScore = 0;
+        int maxScoreIndex = 0;
+         foreach (int spotIndex in emptySpots)
+        {
+            int spotScore = GetSpotScoreCar(spotIndex);
+            if (spotScore > maxScore)
+            {
+                maxScore = spotScore;
+                maxScoreIndex = spotIndex;
+            }
+        }
+        return maxScoreIndex;
+    }
+
+    private int GetSpotScoreCar(int spotIndex)
+    {
+        int result = parkingSpotService.GetParkingSpotStatus(spotIndex-1);
         result += parkingSpotService.GetParkingSpotStatus(spotIndex + 1);
         return result;
     }
