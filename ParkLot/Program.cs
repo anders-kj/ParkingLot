@@ -7,24 +7,31 @@ internal class Program
         Console.WriteLine("ParkLot_1.0");
         ParkService ps = new ParkService(nofSpots: 10);
 
-        ps.ParkCar(0);
         ps.ParkCar(1);
-        ps.ParkBus(3);
-        ps.ParkBike(9);
+        ps.ParkBike(7);
         ps.PrintSpotsOccupation();
+        ps.ParkBus();
+        ps.PrintSpotsOccupation();
+        ps.ParkBus();
+        ps.PrintSpotsOccupation();
+        ps.ParkBus();
+        ps.PrintSpotsOccupation();
+
+        Console.WriteLine( "auto select--->");
+        ps = new ParkService(10);
         ps.ParkBike();
-        ps.PrintSpotsOccupation();
-        ps.ParkBike();
-        ps.PrintSpotsOccupation();
-        ps.ParkBike();
-        ps.PrintSpotsOccupation();
-        ps.ParkCar(7);
-        ps.ParkBike(5);
-        ps.PrintSpotsOccupation();
         ps.ParkCar();
         ps.PrintSpotsOccupation();
+        ps.ParkBus();
+        ps.PrintSpotsOccupation();
+        ps.ParkBus();
+        ps.PrintSpotsOccupation();
+        ps.ParkBus();
+        ps.PrintSpotsOccupation();
+
+
     }
-}
+} 
 
 internal class ParkService
 {
@@ -141,6 +148,12 @@ internal class ParkService
         parkingSpotStatus[spot] = EMPTY;
     }
 
+    public void ParkBus()
+    {
+        int spotIndex = parkingSpotFinderService.FindBusSpot();
+        ParkBus(spotIndex);
+    }
+
     public void ParkBus(int spot)
     {
         parkingSpotStatus[spot] = OCCUPIED;
@@ -216,7 +229,7 @@ internal class ParkingSpotFinderService
         List<int> emptySpots = parkingSpotService.GetFreeCarSpots();
         int maxScore = 0;
         int maxScoreIndex = 0;
-         foreach (int spotIndex in emptySpots)
+        foreach (int spotIndex in emptySpots)
         {
             int spotScore = GetSpotScoreCar(spotIndex);
             if (spotScore > maxScore)
@@ -230,8 +243,32 @@ internal class ParkingSpotFinderService
 
     private int GetSpotScoreCar(int spotIndex)
     {
-        int result = parkingSpotService.GetParkingSpotStatus(spotIndex-1);
+        int result = parkingSpotService.GetParkingSpotStatus(spotIndex - 1);
         result += parkingSpotService.GetParkingSpotStatus(spotIndex + 1);
+        return result;
+    }
+
+    public int FindBusSpot()
+    {
+        List<int> emptySpots = parkingSpotService.GetFreeBusSpots();
+        int maxScore = 0;
+        int maxScoreIndex = 0;
+        foreach (int spotIndex in emptySpots)
+        {
+            int spotScore = GetSpotScoreBus(spotIndex);
+            if (spotScore > maxScore)
+            {
+                maxScore = spotScore;
+                maxScoreIndex = spotIndex;
+            }
+        }
+        return maxScoreIndex;
+    }
+
+    private int GetSpotScoreBus(int spotIndex)
+    {
+        int result = parkingSpotService.GetParkingSpotStatus(spotIndex - 1);
+        result += parkingSpotService.GetParkingSpotStatus(spotIndex + 2);
         return result;
     }
 }
