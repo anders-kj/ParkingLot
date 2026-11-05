@@ -3,27 +3,26 @@
 internal class ParkService
 {
     private const decimal COST_PER_MINUTE = 1.5M;
-    ParkingSpotService parkingSpotService;
+    //ParkingSpotService parkingSpotService;
+    private ParkingZone parkingZone;
     private List<Parking> activeParkings;
     public int TotalNumberOfParkingSpots { get; }
 
 
     public ParkService(int nofSpots)
     {
-        parkingSpotService = new ParkingSpotService(nofSpots);
+        //parkingSpotService = new ParkingSpotService(nofSpots);
+        parkingZone = new ParkingZone(nofSpots);
         activeParkings = new List<Parking>();
         TotalNumberOfParkingSpots = nofSpots;
     }
 
     public void Park(MotorCycle bike)
     {
-        if (parkingSpotService.NofFreeHalfSpots > 0)
+        if (parkingZone.NofFreeHalfSpots > 0)
         {
-            int spotNumber = parkingSpotService.ParkHalfSpot();
+            int spotNumber = ParkingSpotService.FindHalfSpot(parkingZone);
             AddNewParking(bike, spotNumber);
-            //Parking p = new Parking(bike, spotNumber);
-            //activeParkings.Add(p);
-            //Console.WriteLine($"Parking {bike.ToString()} on spot {spotNumber}");
         }
         else
         {
@@ -33,9 +32,10 @@ internal class ParkService
 
     public void Park(Car car)
     {
-        if (parkingSpotService.NofFreeFullSpots > 0)
+        if (parkingZone.NofFreeFullSpots > 0)
         {
-            int spotNumber = parkingSpotService.ParkFullSpot();
+            int spotNumber = ParkingSpotService.FindFullSpot(parkingZone);
+
             AddNewParking(car, spotNumber);
         } else
         {
@@ -45,9 +45,9 @@ internal class ParkService
 
     public void Park(Bus bus)
     {
-        if (parkingSpotService.NofFreeDoubleSpots > 0)
+        if (parkingZone.NofFreeDoubleSpots > 0)
         {
-            int spotNumber = parkingSpotService.ParkDoubleSpot();
+            int spotNumber = ParkingSpotService.FindDoubleSpot(parkingZone);
             AddNewParking(bus, spotNumber);
         } else
         {
@@ -59,12 +59,25 @@ internal class ParkService
     {
         Parking p = new Parking(v, spotIndex);
         activeParkings.Add(p);
+
+        switch(v)
+        {
+            case MotorCycle:
+                parkingZone.ParkHalfSpot(spotIndex);
+                break;
+            case Car:
+                parkingZone.ParkFullSpot(spotIndex);
+                break;
+            case Bus:
+                parkingZone.ParkDoubleSpot(spotIndex);
+                break;
+        }
         Console.WriteLine($"Parking {v.ToString()} on spot {spotIndex}");
     }
 
     
 
-    public Parking? GetActiveParkingFor(string regNumber)
+    private Parking? GetActiveParkingFor(string regNumber)
     {
         if (regNumber == null) return null;
         foreach (var p in activeParkings)
@@ -91,25 +104,25 @@ internal class ParkService
         return result;
     }
 
-    public void CheckOut(Parking p)
+    private void CheckOut(Parking p)
     {
         activeParkings.Remove(p);
 
         switch (p.Vehicle)
         {
             case MotorCycle m:
-                parkingSpotService.ReleaseHalfSpot(p.ParkingSpotIndex);
+                parkingZone.ReleaseHalfSpot(p.ParkingSpotIndex);
                 break;
             case Car c:
-                parkingSpotService.ReleaseFullSpot(p.ParkingSpotIndex);
+                parkingZone.ReleaseFullSpot(p.ParkingSpotIndex);
                 break;
             case Bus b:
-                parkingSpotService.ReleaseDoubleSpot(p.ParkingSpotIndex);
+                parkingZone.ReleaseDoubleSpot(p.ParkingSpotIndex);
                 break;
         }
     }
 
-    public decimal CalculateCost(Parking p)
+    private decimal CalculateCost(Parking p)
     {
         decimal result = ((decimal)p.ParkingTimeSeconds / (decimal)60) * COST_PER_MINUTE;
         return result;
