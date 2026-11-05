@@ -2,24 +2,22 @@
 
 namespace ParkLot;
 
-internal class ParkingAdmin
+internal class ParkingApp
 {
     private ParkingService parkingService;
 
-    public ParkingAdmin(ParkingService parkService)
+    public ParkingApp(ParkingService parkService)
     {
         this.parkingService = parkService;
     }
 
     public void Start()
     {
-        bool doRun = true;
-
         Car nextCar = VehicleFactory.CreateNewCar();
         MotorCycle nextMC = VehicleFactory.CreateNewMC();
         Bus nextBus = VehicleFactory.CreateNewBus();
 
-        while (doRun)
+        while (true)
         {
             Console.Clear();
             parkingService.Print();
@@ -34,19 +32,16 @@ internal class ParkingAdmin
             switch (key.Key)
             {
                 case ConsoleKey.F1:
-                    Console.WriteLine($"Försöker Parkera MotorCykeln: {nextMC}");
                     parkingService.Park(nextMC);
                     nextMC = VehicleFactory.CreateNewMC();
                     Console.ReadKey();
                     break;
                 case ConsoleKey.F2:
-                    Console.WriteLine($"Försöker Parkera Bilen: {nextCar}");
                     parkingService.Park(nextCar);
                     nextCar = VehicleFactory.CreateNewCar();
                     Console.ReadKey();
                     break;
                 case ConsoleKey.F3:
-                    Console.WriteLine($"Försöker Parkera Bussen: {nextBus}");
                     parkingService.Park(nextBus);
                     nextBus = VehicleFactory.CreateNewBus();
                     Console.ReadKey();
@@ -56,14 +51,7 @@ internal class ParkingAdmin
                     Console.Write("UtCheckning - Ange Registreringsnummer :");
                     string? regNumber = Console.ReadLine();
 
-                    if (parkingService.CheckOut(regNumber))
-                    {
-                        Console.WriteLine("Fordon lämnar parkering.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Hittar ej Registreringsnummer för Aktiva Parkerade fordon.");
-                    }
+                    parkingService.CheckOut(regNumber);
                     Console.ReadKey();
                     break;
             }

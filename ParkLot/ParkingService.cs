@@ -7,10 +7,8 @@ internal class ParkingService
     private List<Parking> activeParkings;
     public int TotalNumberOfParkingSpots { get; }
 
-
     public ParkingService(int nofSpots)
     {
-        //parkingSpotService = new ParkingSpotService(nofSpots);
         parkingZone = new ParkingZone(nofSpots);
         activeParkings = new List<Parking>();
         TotalNumberOfParkingSpots = nofSpots;
@@ -18,50 +16,51 @@ internal class ParkingService
 
     public void Park(MotorCycle bike)
     {
-        if (parkingZone.NofFreeHalfSpots > 0)
+        if (parkingZone.NofAvailableHalfSpots > 0)
         {
             int spotNumber = ParkingSpotFinder.FindHalfSpot(parkingZone);
             AddNewParking(bike, spotNumber);
         }
         else
         {
-            Console.WriteLine($"No room for Bike {bike.ToString()}. Welcome Back Later!");
+            Console.WriteLine($"---> Parkering Misslyckades för {bike.ToString()}. Välkommen Åter!");
         }
     }
 
     public void Park(Car car)
     {
-        if (parkingZone.NofFreeFullSpots > 0)
+        if (parkingZone.NofAvailableFullSpots > 0)
         {
             int spotNumber = ParkingSpotFinder.FindFullSpot(parkingZone);
 
             AddNewParking(car, spotNumber);
-        } else
+        }
+        else
         {
-            Console.WriteLine($"No room for {car.ToString()}. Welcome Back Later!");
+            Console.WriteLine($"---> Parkering Misslyckades för {car.ToString()}. Välkommen Åter!");
         }
     }
 
-    
-
     public void Park(Bus bus)
     {
-        if (parkingZone.NofFreeDoubleSpots > 0)
+        if (parkingZone.NofAvailableDoubleSpots > 0)
         {
             int spotNumber = ParkingSpotFinder.FindDoubleSpot(parkingZone);
             AddNewParking(bus, spotNumber);
-        } else
+        }
+        else
         {
-            Console.WriteLine($"No room for {bus.ToString()}. Welcom Back Later!");
+            Console.WriteLine($"---> Parkering Misslyckades för  {bus.ToString()}. Välkommen Åter!");
         }
     }
 
     public void Park(MotorCycle mc, int spotNumber)
     {
-        if (parkingZone.HasFreeHalfParking(spotNumber))
+        if (parkingZone.HasAvailableHalfParking(spotNumber))
         {
             AddNewParking(mc, spotNumber);
-        } else
+        }
+        else
         {
             Console.WriteLine($"ParkingSpot {spotNumber} can not fit {mc}");
         }
@@ -69,7 +68,7 @@ internal class ParkingService
 
     public void Park(Car car, int spotNumber)
     {
-        if (parkingZone.HasFreeFullParking(spotNumber))
+        if (parkingZone.HasAvailableFullParking(spotNumber))
         {
             AddNewParking(car, spotNumber);
         }
@@ -81,7 +80,7 @@ internal class ParkingService
 
     public void Park(Bus bus, int spotNumber)
     {
-        if (parkingZone.HasFreeDoubleParking(spotNumber))
+        if (parkingZone.HasAvailableDoubleParking(spotNumber))
         {
             AddNewParking(bus, spotNumber);
         }
@@ -96,7 +95,7 @@ internal class ParkingService
         Parking p = new Parking(v, spotIndex);
         activeParkings.Add(p);
 
-        switch(v)
+        switch (v)
         {
             case MotorCycle:
                 parkingZone.ParkHalfSpot(spotIndex);
@@ -108,12 +107,10 @@ internal class ParkingService
                 parkingZone.ParkDoubleSpot(spotIndex);
                 break;
         }
-        Console.WriteLine($"Parking {v.ToString()} on spot {spotIndex}");
+        Console.WriteLine($"Startar parkering för {v.ToString()} på plats {spotIndex}");
     }
 
-    
-
-    private Parking? GetActiveParkingFor(string regNumber)
+    private Parking GetActiveParkingFor(string regNumber)
     {
         if (regNumber == null) return null;
         foreach (var p in activeParkings)
@@ -129,13 +126,16 @@ internal class ParkingService
     public bool CheckOut(string regNumber)
     {
         bool result = false;
-        Console.WriteLine($"Checkar ut fordon med RegistreringsNummer {regNumber}");
         Parking p = GetActiveParkingFor(regNumber);
         if (p != null)
         {
             Console.WriteLine($"Avslutar parkering för {p.ToString()} Total Kostnad : {CalculateCost(p):F2} kr");
             CheckOut(p);
             result = true;
+        }
+        else
+        {
+            Console.WriteLine($"Hittar ej Registreringsnummer {regNumber} för Aktiva Parkerade fordon.");
         }
         return result;
     }
@@ -146,13 +146,13 @@ internal class ParkingService
 
         switch (p.Vehicle)
         {
-            case MotorCycle m:
+            case MotorCycle:
                 parkingZone.ReleaseHalfSpot(p.ParkingSpotIndex);
                 break;
-            case Car c:
+            case Car:
                 parkingZone.ReleaseFullSpot(p.ParkingSpotIndex);
                 break;
-            case Bus b:
+            case Bus:
                 parkingZone.ReleaseDoubleSpot(p.ParkingSpotIndex);
                 break;
         }

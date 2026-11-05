@@ -18,9 +18,7 @@ internal partial class Program
         ps.Park(VehicleFactory.CreateNewBus(), 10);
 
 
-        ParkingAdmin admin = new ParkingAdmin(ps);
-        //Console.WriteLine("Press Key To start ParkAdmin.");
-        //Console.ReadKey();
-        admin.Start();
+        ParkingApp app = new ParkingApp(ps);
+        app.Start();
     }
 }

@@ -5,7 +5,7 @@ internal class ParkingSpotFinder
     public static int FindHalfSpot(ParkingZone parkingZone)
     {
         //Lista lediga platser som har utrymme för ett halvt fordon
-        List<int> emptySpots = parkingZone.GetFreeHalfSpots();
+        List<int> emptySpots = parkingZone.GetAvailableHalfSpots();
 
         //Hitta den lediga plats i listan som packar ihop fordon på bästa sätt         
         int maxFillScore = 0;
@@ -34,7 +34,7 @@ internal class ParkingSpotFinder
 
     public static int FindFullSpot(ParkingZone parkingZone)
     {
-        List<int> emptySpots = parkingZone.GetFreeFullSpots();
+        List<int> emptySpots = parkingZone.GetAvailableFullSpots();
         int maxFillScore = 0;
         int maxFillScoreIndex = 0;
         foreach (int spotIndex in emptySpots)
@@ -58,7 +58,7 @@ internal class ParkingSpotFinder
 
     public static int FindDoubleSpot(ParkingZone parkingZone)
     {
-        List<int> emptySpots = parkingZone.GetFreeDoubleSpots();
+        List<int> emptySpots = parkingZone.GetAvailableDoubleSpots();
         int maxFillScore = 0;
         int maxFillScoreIndex = 0;
         foreach (int spotIndex in emptySpots)

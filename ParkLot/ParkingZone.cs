@@ -4,9 +4,9 @@ internal class ParkingZone
 {
 
     public int NofParkingSpots { get { return parkingSpots.Length; } }
-    public int NofFreeHalfSpots { get { return GetFreeHalfSpots().Count; } }
-    public int NofFreeFullSpots { get { return GetFreeFullSpots().Count; } }
-    public int NofFreeDoubleSpots { get { return GetFreeDoubleSpots().Count; } }
+    public int NofAvailableHalfSpots { get { return GetAvailableHalfSpots().Count; } }
+    public int NofAvailableFullSpots { get { return GetAvailableFullSpots().Count; } }
+    public int NofAvailableDoubleSpots { get { return GetAvailableDoubleSpots().Count; } }
 
     private ParkingSpot[] parkingSpots;
     public ParkingZone(int nofSpots) 
@@ -31,22 +31,22 @@ internal class ParkingZone
         return parkingSpots[parkingSpotIndex].Status;
     }
 
-    public bool HasFreeFullParking(int parkingSpotIndex)
+    public bool HasAvailableFullParking(int parkingSpotIndex)
     {
         return parkingSpots[parkingSpotIndex].IsEmpty;
     }
 
-    public bool HasFreeHalfParking(int parkingSpotIndex)
+    public bool HasAvailableHalfParking(int parkingSpotIndex)
     {
         return (!parkingSpots[parkingSpotIndex].IsOccupied);
     }
 
-    public bool HasFreeDoubleParking(int parkingSpotIndex)
+    public bool HasAvailableDoubleParking(int parkingSpotIndex)
     {
         return parkingSpots[parkingSpotIndex].IsEmpty && parkingSpots[parkingSpotIndex + 1].IsEmpty;
     }
 
-    public List<int> GetFreeFullSpots()
+    public List<int> GetAvailableFullSpots()
     {
         List<int> result = new List<int>();
         for (int i = 0; i < parkingSpots.Length; i++)
@@ -59,7 +59,7 @@ internal class ParkingZone
         return result;
     }
 
-    public List<int> GetFreeHalfSpots()
+    public List<int> GetAvailableHalfSpots()
     {
         List<int> result = new List<int>();
         for (int i = 0; i < parkingSpots.Length; i++)
@@ -72,7 +72,7 @@ internal class ParkingZone
         return result;
     }
 
-    public List<int> GetFreeDoubleSpots()
+    public List<int> GetAvailableDoubleSpots()
     {
         List<int> result = new List<int>();
         for (int i = 0; i < parkingSpots.Length - 1; i++)
@@ -120,7 +120,6 @@ internal class ParkingZone
     {
         parkingSpots[spot].Status = ParkingSpot.EMPTY;
     }
-
 
     public void ParkDoubleSpot(int spot)
     {

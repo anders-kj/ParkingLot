@@ -15,6 +15,4 @@ internal class ParkingSpot
     {
         Status = EMPTY;
     }
-
-
 }
