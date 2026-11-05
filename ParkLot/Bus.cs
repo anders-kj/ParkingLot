@@ -11,7 +11,7 @@ internal class Bus : Vehicle
 
     public override string ToString()
     {
-        return $"Bus, {this.RegNumber}, {NofPassengers}-passengers, {Color}";
+        return $"Buss, {this.RegNumber}, {NofPassengers}-passagerare, {Color}";
     }
 }
 

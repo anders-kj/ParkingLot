@@ -31,6 +31,21 @@ internal class ParkingZone
         return parkingSpots[parkingSpotIndex].Status;
     }
 
+    public bool HasFreeFullParking(int parkingSpotIndex)
+    {
+        return parkingSpots[parkingSpotIndex].IsEmpty;
+    }
+
+    public bool HasFreeHalfParking(int parkingSpotIndex)
+    {
+        return (!parkingSpots[parkingSpotIndex].IsOccupied);
+    }
+
+    public bool HasFreeDoubleParking(int parkingSpotIndex)
+    {
+        return parkingSpots[parkingSpotIndex].IsEmpty && parkingSpots[parkingSpotIndex + 1].IsEmpty;
+    }
+
     public List<int> GetFreeFullSpots()
     {
         List<int> result = new List<int>();

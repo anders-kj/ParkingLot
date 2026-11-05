@@ -10,8 +10,8 @@ internal class Car : Vehicle
 
     public override string ToString()
     {
-        string type = IsElectric ? "EV" : "Fuel";
-        return $"Car, {this.RegNumber}, {type}, {Color}";
+        string type = IsElectric ? "EV" : "Bensin";
+        return $"Bil, {this.RegNumber}, {type}, {Color}";
     }
 }
 

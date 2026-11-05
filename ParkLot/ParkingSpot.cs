@@ -7,8 +7,9 @@ internal class ParkingSpot
     public const int OCCUPIED = 2;
     public int Status { get; set; }
 
-    public bool IsEmpty { get { return Status == EMPTY; }}
+    public bool IsEmpty { get { return Status == EMPTY; } }
     public bool IsHalfOccupied { get { return Status == HALF_OCCUPIED; } }
+    public bool IsOccupied { get { return Status == OCCUPIED; } }
 
     public ParkingSpot()
     {

@@ -1,15 +1,14 @@
 ﻿namespace ParkLot;
 
-internal class ParkService
+internal class ParkingService
 {
     private const decimal COST_PER_MINUTE = 1.5M;
-    //ParkingSpotService parkingSpotService;
     private ParkingZone parkingZone;
     private List<Parking> activeParkings;
     public int TotalNumberOfParkingSpots { get; }
 
 
-    public ParkService(int nofSpots)
+    public ParkingService(int nofSpots)
     {
         //parkingSpotService = new ParkingSpotService(nofSpots);
         parkingZone = new ParkingZone(nofSpots);
@@ -21,7 +20,7 @@ internal class ParkService
     {
         if (parkingZone.NofFreeHalfSpots > 0)
         {
-            int spotNumber = ParkingSpotService.FindHalfSpot(parkingZone);
+            int spotNumber = ParkingSpotFinder.FindHalfSpot(parkingZone);
             AddNewParking(bike, spotNumber);
         }
         else
@@ -34,7 +33,7 @@ internal class ParkService
     {
         if (parkingZone.NofFreeFullSpots > 0)
         {
-            int spotNumber = ParkingSpotService.FindFullSpot(parkingZone);
+            int spotNumber = ParkingSpotFinder.FindFullSpot(parkingZone);
 
             AddNewParking(car, spotNumber);
         } else
@@ -43,15 +42,52 @@ internal class ParkService
         }
     }
 
+    
+
     public void Park(Bus bus)
     {
         if (parkingZone.NofFreeDoubleSpots > 0)
         {
-            int spotNumber = ParkingSpotService.FindDoubleSpot(parkingZone);
+            int spotNumber = ParkingSpotFinder.FindDoubleSpot(parkingZone);
             AddNewParking(bus, spotNumber);
         } else
         {
             Console.WriteLine($"No room for {bus.ToString()}. Welcom Back Later!");
+        }
+    }
+
+    public void Park(MotorCycle mc, int spotNumber)
+    {
+        if (parkingZone.HasFreeHalfParking(spotNumber))
+        {
+            AddNewParking(mc, spotNumber);
+        } else
+        {
+            Console.WriteLine($"ParkingSpot {spotNumber} can not fit {mc}");
+        }
+    }
+
+    public void Park(Car car, int spotNumber)
+    {
+        if (parkingZone.HasFreeFullParking(spotNumber))
+        {
+            AddNewParking(car, spotNumber);
+        }
+        else
+        {
+            Console.WriteLine($"ParkingSpot {spotNumber} can not fit {car}");
+        }
+    }
+
+    public void Park(Bus bus, int spotNumber)
+    {
+        if (parkingZone.HasFreeDoubleParking(spotNumber))
+        {
+            AddNewParking(bus, spotNumber);
+        }
+        else
+        {
+            Console.WriteLine($"ParkingSpot {spotNumber} can not fit {bus}");
         }
     }
 
@@ -156,29 +192,5 @@ internal class ParkService
         {
             Console.WriteLine(spotState[i]);
         }
-    }
-}
-
-
-internal class Parking(Vehicle vehicle, int spotNumber)
-{
-    private DateTimeOffset StartTime { get; } = DateTimeOffset.UtcNow;
-    public int ParkingTimeSeconds { get { return (int)(DateTimeOffset.UtcNow - StartTime).TotalSeconds; } }
-    public Vehicle Vehicle { get; } = vehicle;
-    public int ParkingSpotIndex { get; } = spotNumber;
-
-    public void Print()
-    {
-        Console.WriteLine($"{Vehicle} Time:{ParkingTimeSeconds}s");
-    }
-
-    public override string ToString()
-    {
-        return $"[{Vehicle.ToString()}, {StartTime:HH:mm}]";
-    }
-
-    public bool ContainVehicleWith(string regNumber)
-    {
-        return regNumber.CompareTo(Vehicle.RegNumber, StringComparison.OrdinalIgnoreCase) == 0;
     }
 }
