@@ -9,5 +9,10 @@ internal class Vehicle
         RegNumber = regNumber;
         Color = color;
     }
+
+    public override string ToString()
+    {
+        return $"RegNr {RegNumber} Color {Color}";
+    }
 }
 

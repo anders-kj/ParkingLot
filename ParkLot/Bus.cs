@@ -8,5 +8,10 @@ internal class Bus : Vehicle
     {
         NofPassengers = nofPassengers;
     }
+
+    public override string ToString()
+    {
+        return $"Bus, {this.RegNumber}, {NofPassengers}-passengers, {Color}";
+    }
 }
 

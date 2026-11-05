@@ -7,5 +7,10 @@ internal class MotorCycle: Vehicle
     {
         Manufacturer = manufacturer;
     }
+
+    public override string ToString()
+    {
+        return $"MC, {this.RegNumber}, {Manufacturer}, {Color}";
+    }
 }
 
