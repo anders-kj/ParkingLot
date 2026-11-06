@@ -31,6 +31,7 @@ internal class ParkingService
     {
         if (parkingZone.NofAvailableFullSpots > 0)
         {
+            //Hitta bästa lediga platsen som undviker onödiga luckor 
             int spotNumber = ParkingSpotFinder.FindFullSpot(parkingZone);
 
             AddNewParking(car, spotNumber);
@@ -90,12 +91,13 @@ internal class ParkingService
         }
     }
 
-    private void AddNewParking(Vehicle v, int spotIndex)
+    private void AddNewParking(Vehicle vehicle, int spotIndex)
     {
-        Parking p = new Parking(v, spotIndex);
-        activeParkings.Add(p);
+        
+        Parking newParking = new Parking(vehicle, spotIndex);
+        activeParkings.Add(newParking);
 
-        switch (v)
+        switch (vehicle)
         {
             case MotorCycle:
                 parkingZone.ParkHalfSpot(spotIndex);
@@ -107,7 +109,7 @@ internal class ParkingService
                 parkingZone.ParkDoubleSpot(spotIndex);
                 break;
         }
-        Console.WriteLine($"Startar parkering för {v.ToString()} på plats {spotIndex}");
+        Console.WriteLine($"Startar parkering för {vehicle.ToString()} på plats {spotIndex}");
     }
 
     private Parking GetActiveParkingFor(string regNumber)

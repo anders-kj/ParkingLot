@@ -9,7 +9,7 @@ internal class ParkingSpotFinder
 
         //Hitta den lediga plats i listan som packar ihop fordon på bästa sätt         
         int maxFillScore = 0;
-        int maxFillScoreIndex = 0;
+        int result = 0;
         foreach (int spotIndex in emptySpots)
         {
             //För varje ledig plats i listan beräknas en poäng som baseras på hur tätt fordonen parkeras omgivande fordon.
@@ -18,10 +18,10 @@ internal class ParkingSpotFinder
             if (spotFillScore > maxFillScore)
             {
                 maxFillScore = spotFillScore;
-                maxFillScoreIndex = spotIndex;
+                result = spotIndex;
             }
         }
-        return maxFillScoreIndex;
+        return result;
     }
 
     private static int GetHalfSpotFillScore(ParkingZone parkingZone, int spotIndex)
@@ -35,18 +35,22 @@ internal class ParkingSpotFinder
     public static int FindFullSpot(ParkingZone parkingZone)
     {
         List<int> emptySpots = parkingZone.GetAvailableFullSpots();
+
+        //Hitta den lediga plats i listan som packar ihop fordon på bästa sätt
         int maxFillScore = 0;
-        int maxFillScoreIndex = 0;
+        int result = 0;
         foreach (int spotIndex in emptySpots)
         {
+            //För varje ledig plats i listan beräknas en poäng som baseras på hur tätt fordonen parkeras omgivande fordon.
+            //Ju Mindre fria ytor runt platsen desto högre poäng.
             int spotFillScore = GetFullSpotFillScore(parkingZone, spotIndex);
             if (spotFillScore > maxFillScore)
             {
                 maxFillScore = spotFillScore;
-                maxFillScoreIndex = spotIndex;
+                result = spotIndex;
             }
         }
-        return maxFillScoreIndex;
+        return result; 
     }
 
     private static int GetFullSpotFillScore(ParkingZone parkingZone, int spotIndex)
@@ -60,17 +64,17 @@ internal class ParkingSpotFinder
     {
         List<int> emptySpots = parkingZone.GetAvailableDoubleSpots();
         int maxFillScore = 0;
-        int maxFillScoreIndex = 0;
+        int result = 0;
         foreach (int spotIndex in emptySpots)
         {
             int spotFillScore = GetDoubleSpotFillScore(parkingZone, spotIndex);
             if (spotFillScore > maxFillScore)
             {
                 maxFillScore = spotFillScore;
-                maxFillScoreIndex = spotIndex;
+                result = spotIndex;
             }
         }
-        return maxFillScoreIndex;
+        return result;
     }
 
     private static int GetDoubleSpotFillScore(ParkingZone parkingZone, int spotIndex)

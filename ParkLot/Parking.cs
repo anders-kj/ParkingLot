@@ -7,10 +7,6 @@ internal class Parking(Vehicle vehicle, int spotNumber)
     public Vehicle Vehicle { get; } = vehicle;
     public int ParkingSpotIndex { get; } = spotNumber;
 
-    public void Print()
-    {
-        Console.WriteLine($"{Vehicle} Time:{ParkingTimeSeconds}s");
-    }
 
     public override string ToString()
     {
